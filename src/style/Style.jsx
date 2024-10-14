@@ -1,0 +1,8 @@
+export const buttonNav = 'border border-[#16325B] text-[#16325B] px-2 py-1 rounded-md hover:bg-[#16325B] hover:text-white cursor-pointer'
+export const table = 'px-4 py-2 text-center'
+export const statusGreen = 'text-[#00B112] bg-[#ECFFEE] px-3 py-1 rounded-lg font-bold'
+export const statusBlue = 'text-[#166EDF] bg-[#BDE7FF] px-3 py-1 rounded-lg font-bold'
+export const statusYellow = 'text-[#DA8F18] bg-[#FFDD94] px-3 py-1 rounded-lg font-bold'
+export const statusRed = 'text-[#B10000] bg-[#FFECEC] px-3 py-1 rounded-lg font-bold'
+export const button = 'border border-[#16325B] text-[#16325B] px-2 py-1 rounded-md hover:bg-[#16325B] hover:text-white'
+export const disableButton = 'border border-[#16325B] px-2 py-1 rounded-md bg-[#545454] text-white cursor-not-allowed'
