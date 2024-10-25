@@ -1,20 +1,23 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Input from "../../components/Input"
-import { getCategory } from "../../api/api"
+import { getCategory, previewPhoto } from "../../api/api"
 import { useLocation } from "react-router-dom"
-import useUser from "../../hooks/useUser"
+import useOwner from "../../hooks/useOwner";
+import { Camera } from "lucide-react";
+import { toast } from "react-toastify";
 
 function EditMenu() {
 
     const location = useLocation()
-    console.log(location.state);
-    const {editMenuFunction} = useUser()
+    const {editMenuFunction} = useOwner()
     const [category,setCategory] = useState([])
-
+    const [url,setUrl] = useState("")
+    const token = localStorage.getItem('token')
     const [form, setForm] = useState({
         name: location.state.name,
         price: location.state.price,
         categoryId: location.state.category.id,
+        image:''
       });
 
     const getData = async () => {
@@ -27,15 +30,35 @@ function EditMenu() {
     }
 
     
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(e)
-    editMenuFunction(form,location.state.id)
+    if (form.price > 0 && form.name != "") {
+      setForm({ ...form, image: url });
+      await editMenuFunction({ ...form, image: url },location.state.id)
+    }else{
+      toast.error('Edit Menu Failed')
+    }
   }
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
+
+  const fileInputRef = useRef(null);
+
+    const handleCameraClick = () => {
+      fileInputRef.current.click();
+    };
+
+    const handleImage = async(e) =>{
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+      const url = await previewPhoto(formData,token)
+      setUrl(url.data.photo);
+    }
   
+    console.log(location.state);
     useEffect(() => {
       getData()
     },[])
@@ -44,10 +67,11 @@ function EditMenu() {
         <div className=" my-28 w-[98%] h-[98%] p-4 flex flex-col bg-white rounded-lg gap-4 ">
           <form onSubmit={handleSubmit}>
             <div className="flex w-full">
-              <div>
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStUqjQa7JXYZuqmiRPcQeuvyU0k8f-S-zGwA&s" />
-              </div>
+             
               <div className="px-6 w-full py-10">
+              <div className=" pb-6 flex justify-center">
+                <img src={url ?`${url}`:`${location.state.image}`} />
+              </div>
                 <Input label={"Menu Name"} name={"name"} type={"text"} handleChange={handleChange} value={form.name} />
                 <Input label={"Price"} name={"price"} type={"text"} handleChange={handleChange} value={form.price}/>
                 <div className="bg-white p-2 rounded-lg w-full">
@@ -58,6 +82,10 @@ function EditMenu() {
                       ))}
                     </select>
                   </div>
+                </div>
+                <div onClick={handleCameraClick} className="bg-[#16325B] text-white flex  px-2 py-2 rounded-full relative cursor-pointer">
+                  <Camera color="white"/> Add Photo
+                  <input type="file" ref={fileInputRef} onChange={handleImage} name="image" className="hidden" />
                 </div>
               </div>
             </div>

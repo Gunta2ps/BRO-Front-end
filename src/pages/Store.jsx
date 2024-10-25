@@ -36,7 +36,10 @@ function Store() {
   return (
     <div className=" my-28 w-[98%] h-[98%] p-4 flex flex-col bg-white rounded-lg gap-4 ">
         <div className="flex">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStUqjQa7JXYZuqmiRPcQeuvyU0k8f-S-zGwA&s"/>
+            <div className="w-[300px] h-[200px]">
+            <img  className="w-[300px] h-[200px]" src={store ?`${store.profileImage}`:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStUqjQa7JXYZuqmiRPcQeuvyU0k8f-S-zGwA&s"}/>
+            </div>
+            
             <div>
                 <div className="text-3xl font-bold p-6">{store.name}</div>
                 <div className="p-6 text-gray-500">{store.address}</div>
@@ -51,11 +54,11 @@ function Store() {
                             
                             <div key={item.id} className="py-2 flex">
                                 <div className="w-2/4 flex justify-center">
-                                <div><img className="w-20 h-20 rounded-full" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStUqjQa7JXYZuqmiRPcQeuvyU0k8f-S-zGwA&s"/></div>
+                                <div ><img className="w-20 h-20 rounded-full" src={item.image ?item.image :'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStUqjQa7JXYZuqmiRPcQeuvyU0k8f-S-zGwA&s'}/></div>
                                 </div>
                                 <div className="w-2/4 flex flex-col justify-center">
                                 <p>{item.name}</p>
-                                <p>$ {item.price}</p>
+                                <p>฿ {item.price}</p>
                                 </div>
                             </div>
                         ))}

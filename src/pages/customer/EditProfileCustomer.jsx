@@ -1,22 +1,18 @@
 import { useState } from "react"
 import Input from "../../components/Input"
-import { useLocation } from "react-router-dom"
 import useUser from "../../hooks/useUser"
-
 
 function EditProfileCustomer() {
 
-    const location = useLocation()
-    const {editProfile} = useUser()
+    const {editProfile, isUser} = useUser()
 
     const[form,setForm] = useState({
         password:'',
         confirmPassword:'',
-        firstName:location.state.firstName ,
-        lastName:location.state.lastName,
-        phone:location.state.phone
+        firstName:isUser.firstName ,
+        lastName:isUser.lastName,
+        phone:isUser.phone
     }) 
-    console.log(form);
 
     const handleSubmit = (e) => {
         e.preventDefault(e)

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { button, statusGreen, statusRed } from "../../style/Style";
-import useUser from "../../hooks/useUser";
+
 import {
   adminChangeStatusUser,
   adminDeleteUser,
@@ -10,7 +10,7 @@ import {
 
 function UserAdmin() {
   const [user, setUser] = useState([]);
-  const { token } = useUser();
+  const  token  = localStorage.getItem('token')
 
   const getData = async () => {
     try {

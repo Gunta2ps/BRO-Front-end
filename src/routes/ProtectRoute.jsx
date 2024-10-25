@@ -1,25 +1,32 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react"
-import useUser from "../hooks/useUser";
 import {getUsers} from '../api/api'
 import { Navigate } from "react-router-dom";
+import useUser from "../hooks/useUser";
 
 
 function ProtectRoute({element,allow}) {
 
     const [isAllowed,setIsAllowed] = useState(null)
-    const {token} = useUser()
+    const {setIsUser} = useUser()
+
 
     useEffect(()=>{
-        checkRole()
+        const token = localStorage.getItem('token')
+        if(token){
+            checkRole()
+        }
     },[])
 
     const checkRole = async() =>{
         try {
-            const response = await getUsers(token)
+            const storeToken = localStorage.getItem('token')
+            const response = await getUsers(storeToken)
+            setIsUser(response.data.member)
             const role = response.data.member.role
+            const status = response.data.member.status
 
-            if(allow.includes(role)){
+            if(allow.includes(role) && status !== 'INACTIVE'){
                 setIsAllowed(true)
             }else{
                 setIsAllowed(false)

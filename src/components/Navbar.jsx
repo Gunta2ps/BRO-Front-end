@@ -1,19 +1,22 @@
 import { buttonNav } from "../style/Style"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import useUser from "../hooks/useUser"
 
 
 function Navbar() {
-
-  const {logout,isLogin} = useUser()
+  const navigate = useNavigate()
+  const {logout,isUser} = useUser()
+  const handleLogo = () =>{
+    navigate('/')
+  }
 
   return (
     <div className="bg-[#FFDC7F] text-[#16325B] flex h-12 w-full justify-between items-center px-4 gap-4">
-      <a><Link to={'/'}><img className="h-20 w-20" src="/src/assets/original.png"/></Link></a>
+      <a onClick={handleLogo}><img className="h-20 w-20" src="/src/assets/original.png"/></a>
         <ul className="flex gap-4">
         {
-            isLogin
-                ? <li className={buttonNav} onClick={()=>logout()}> <Link to={'/'}>Logout</Link></li>
+            isUser
+                ? <li className={buttonNav} onClick={()=>logout()}> Logout</li>
                 :(<>
                     <li className={buttonNav}><Link to={'/register'}>Sign Up</Link></li>
                     <li className={buttonNav}><Link to={'/login'}>Login</Link></li>

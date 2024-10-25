@@ -15,7 +15,7 @@ function RegisterCustomer() {
 
   return (
     <>
-    <div className=" my-28 mx-auto w-2/4 h-[90%] flex flex-col justify-start items-center bg-white rounded-lg gap-4">
+    <div className=" my-28 mx-auto w-2/4 h-[98%] flex flex-col justify-start items-center bg-white rounded-lg gap-4">
        
        <div className="w-full flex justify-between items-center pt-4 px-4">
         {isChecked

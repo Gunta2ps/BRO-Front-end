@@ -1,49 +1,18 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { createContext, useEffect, useState } from "react";
-import {editProfileFunction, getUsers, loginFunction, registerFunction, createMenu, editMenu} from '../api/api'
+import {editProfileFunction, getUsers, loginFunction, registerFunction} from '../api/api'
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const UserContext = createContext()
 
 function UserContextProvider(props) {
     const navigate = useNavigate()
 
-    const [isLogin,setLogin] = useState(false)
-    const [isUser,setIsUser] = useState({})
-    const [token,setToken] = useState('')
+    const [isUser,setIsUser] = useState(null)
+    const [isRefresh,setIsRefresh] = useState(false)
 
-    useEffect(()=>{
-        const storeLogin = localStorage.getItem('login')
-        const storeToken = localStorage.getItem('token')
-        const storeUser = localStorage.getItem('user')
-
-        if(storeLogin && storeToken && storeUser){
-            setLogin(JSON.parse(storeLogin))
-            setIsUser(JSON.parse(storeUser))
-            setToken(storeToken)
-        }
-    },[])
-
-    useEffect(()=>{
-        if(isLogin){
-            localStorage.setItem('login',JSON.stringify(isLogin))
-            localStorage.setItem('token',token)
-            localStorage.setItem('user',JSON.stringify(isUser))
-        }
-    },[isLogin,isUser,token])
-
-    useEffect(() => {
-        if (isLogin && isUser.role === 'OWNER') {
-          navigate('/owner');
-        }else if(isLogin && isUser.role === 'CUSTOMER'){
-            navigate('/customer');
-        }else if(isLogin && isUser.role === 'ADMIN'){
-            navigate('/admin');
-        }else{
-            navigate('/');
-        }
-      }, [isUser, token, isLogin, navigate]);
     const register = async(form) =>{
         try {
             const response = await registerFunction(form)
@@ -57,28 +26,47 @@ function UserContextProvider(props) {
     const login = async (form) =>{
         try {
             const response = await loginFunction(form)
-            setToken(response.data.result.token)
             setIsUser(response.data.result.user.user)
-            setLogin(true)
+            localStorage.setItem('token',response.data.result.token)
+            const role = response.data.result.user.user.role
+            console.log(role);
+            switch (role) {
+                case 'CUSTOMER':
+                    toast.success('Login Success as Customer')
+                    navigate('/customer')
+                    break;
+                case 'OWNER':
+                    toast.success('Login Success as Owner')
+                    navigate('/owner')
+                    break;
+                case 'ADMIN':
+                    toast.success('Login Success as Admin')
+                    navigate('/admin')
+                    break;
+            }
+   
+       
         } catch (error) {
-            console.log(error.message);
+            console.log(error.response);
+            toast.error('Login Fail Try again');
         }
     }
     const logout = () =>{
-        setLogin(false)
+    
         setIsUser(null)
-        setToken('')
-        localStorage.removeItem('login');
-        localStorage.removeItem('user');
         localStorage.removeItem('token');
+        toast.success('Log Out')
+        navigate('/')
     }
 
     const editProfile = async (form) =>{
         try {
-            const response = await editProfileFunction(form,token)
-            const responseUser = await getUsers(token)
+            const storeToken = localStorage.getItem('token')
+            const response = await editProfileFunction(form,storeToken)
+            const responseUser = await getUsers(storeToken)
             setIsUser(responseUser.data.member)
-            if(isUser.role === 'CUSTOMER'){
+            toast.success('Edit Profile Successfully')
+            if(isUser.role === 'CUSTOMER'){  
                 navigate('/customer/profile')
             }else{
                 navigate('/owner/profile')
@@ -88,27 +76,50 @@ function UserContextProvider(props) {
         }
     }
 
-    const addMenu = async (form) =>{
+    const getData = async () => {
         try {
-            const response = await createMenu(form,token)
-            navigate('/owner')
+            const storeToken = localStorage.getItem('token')
+            const responseUser = await getUsers(storeToken);
+            setIsUser(responseUser.data.member);
+            return responseUser.data.member
+        } catch (error) {
+          console.log(error);
+        }
+    };
+
+    const checkUser = async () => {
+        try {
+            const token = localStorage.getItem('token')
+          
+            if(token){
+               const res = await getData()
+                switch (res.role) {
+                    case "CUSTOMER":
+                        navigate('/customer')
+                        break;
+                    case "OWNER":
+                        navigate('/owner')
+                        break;
+                    case "ADMIN":
+                        navigate('/admin')
+                        break;
+                    default:
+                        navigate('/')
+                        break;
+                }
+            }
         } catch (error) {
             console.log(error);
         }
     }
 
-    const editMenuFunction = async(form,id) =>{
-        try {
-            const response = await editMenu(form,token,id)
-            navigate('/owner')
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    useEffect(()=>{
+        checkUser()
+    },[])
     
     return(
-        <UserContext.Provider value={{register,login,isLogin,
-            editMenuFunction,setLogin,logout,isUser,token,editProfile,addMenu}}>
+        <UserContext.Provider value={{register,login,setIsUser,checkUser,
+            logout,isUser,editProfile,isRefresh,setIsRefresh,getData}}>
             {props.children}
         </UserContext.Provider>
     )

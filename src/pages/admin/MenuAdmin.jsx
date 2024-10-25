@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { button, statusGreen, statusRed } from "../../style/Style";
-import useUser from "../../hooks/useUser";
+
 import { adminChangeStatusMenu, adminDeleteMenu, adminGetMenu } from "../../api/adminApi";
 
 function MenuAdmin() {
   const [menu, setMenu] = useState([]);
-  const { token } = useUser();
+  const  token  = localStorage.getItem('token')
 
   const getData = async () => {
     try {
@@ -64,7 +64,7 @@ function MenuAdmin() {
                 <td className="px-4 py-2 text-center">{item.id}</td>
                 <td className="px-4 py-2 text-center">{item.name}</td>
                 <td className="px-4 py-2 text-center">{item.category.name}</td>
-                <td className="px-4 py-2 text-center">$ {item.price}</td>
+                <td className="px-4 py-2 text-center">฿ {item.price}</td>
                 <td className="px-4 py-2 text-center">{item.store.name}</td>
                 <td className="px-4 py-2 text-center">
                   <span

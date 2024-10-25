@@ -1,26 +1,29 @@
 import { useState } from "react"
 import Input from "../../components/Input"
-import { useLocation } from "react-router-dom"
 import useUser from "../../hooks/useUser"
+import useOwner from "../../hooks/useOwner"
+import { toast } from "react-toastify"
 
 function EditProfileOwner() {
 
-    const location = useLocation()
-    const {editProfile} = useUser()
+    const {editProfile,isUser} = useUser()
+    const {store} = useOwner()
 
     const[form,setForm] = useState({
         password:'',
         confirmPassword:'',
-        storeName:location.state.store.name,
-        address:location.state.store.address,
-        firstName:location.state.user.firstName,
-        lastName:location.state.user.lastName,
-        phone:location.state.user.phone
+        storeName:store?.name,
+        address:store?.address,
+        firstName:isUser?.firstName,
+        lastName:isUser?.lastName,
+        phone:isUser?.phone
     })
 
+
     const handleSubmit = (e) => {
-        e.preventDefault(e)
+        e.preventDefault()
         editProfile(form)
+        toast.success('Edit Profile Successfully')
     }
 
     const handleChange = (e) =>{

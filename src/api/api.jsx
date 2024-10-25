@@ -12,6 +12,8 @@ export const getUsers = (token) => axios.get('/auth/get-user',{
 
 export const getCategory = () => axios.get('/category')
 
+export const getCategoryRestaurant = () => axios.get('/category/restaurant')
+
 export const getStore = () => axios.get('/store')
 
 export const getMenuOwner = (token) => axios.get('/menu',{
@@ -31,6 +33,25 @@ export const editProfileFunction = (form,token) => axios.patch('/auth/edit',form
         Authorization: `Bearer ${token}`
     }
 })
+
+export const editPhoto = (file,token) => axios.patch('/auth/edit/photo',file,{
+    headers:{
+        Authorization: `Bearer ${token}`
+    }
+})
+
+export const editPhotoStore = (file,token) => axios.patch('/store/edit/photo',file,{
+    headers:{
+        Authorization:`Bearer ${token}`
+    }
+})
+
+export const previewPhoto = (file,token) => axios.post('/menu/photo',file,{
+    headers:{
+        Authorization:`Bearer ${token}`
+    }
+})
+
 
 export const showAllMenu = (id) => axios.get(`/menu/${id}`)
 export const showStore = (id) => axios.get(`/store/${id}`)
@@ -57,3 +78,44 @@ export const deleteMenu = (token,id) => axios.delete(`/menu/delete/${id}`,{
         Authorization: `Bearer ${token}`
     }
 })
+
+export const createOrder = (form,token,id) => axios.post(`/order/add/${id}`,form,{
+    headers:{
+        Authorization: `Bearer ${token}`
+    }
+})
+
+export const getCustomerOrder = (token) => axios.get('/order/customer-order',{
+    headers:{
+        Authorization: `Bearer ${token}`
+    }
+})
+
+export const getOwnerOrder = (token) => axios.get('/order/owner-order',{
+    headers:{
+        Authorization: `Bearer ${token}`
+    }
+})
+
+export const getMyOrder = (id,token) => axios.get(`/order/my-order/${id}`,{
+    headers:{
+        Authorization: `Bearer ${token}`
+    }
+})
+export const changeStatusToDoneFunction = (token,id) => axios.patch(`/order/done`,{id},{
+    headers:{
+        Authorization: `Bearer ${token}`
+    }
+})
+export const changeStatusToCancelFunction = (token,id) => axios.patch(`/order/cancel`,{id},{
+    headers:{
+        Authorization: `Bearer ${token}`
+    }
+})
+export const changeStatusToConfirmFunction = (token,id) => axios.patch(`/order/confirm`,{id},{
+    headers:{
+        Authorization: `Bearer ${token}`
+    }
+})
+
+export const searchFunction = (query) => axios.get(`/store/search?search=${query}`)

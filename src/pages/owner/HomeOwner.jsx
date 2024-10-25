@@ -4,16 +4,16 @@ import { useEffect, useState } from "react"
 import { changeStatusMenu, deleteMenu, getMenuOwner } from "../../api/api";
 import useUser from "../../hooks/useUser";
 import { useNavigate } from "react-router-dom";
-import { button } from "../../style/Style";
+import { button, statusGreen, statusRed } from "../../style/Style";
 
 
 function HomeOwner() {
 
     const [menu,setMenu] = useState([])
-    const {token} = useUser()
+    const token = localStorage.getItem('token')
     const navigate = useNavigate()
 
-    const getData = async () => {
+    const getMenu = async () => {
         try {
             const responseMenu = await getMenuOwner(token)
             setMenu(responseMenu.data.menu)
@@ -33,7 +33,7 @@ function HomeOwner() {
     const handleActive = async(id) =>{
       try {
         const response = await changeStatusMenu(token,id)
-        getData()
+        getMenu()
       } catch (error) {
         console.log(error);
       }
@@ -42,14 +42,14 @@ function HomeOwner() {
     const handleDelete = async(id) =>{
       try {
         const response = await deleteMenu(token,id)
-        getData()
+        getMenu()
       } catch (error) {
         console.log(error);
       }
     }
 
     useEffect(() =>{
-        getData()
+      getMenu()
     },[])
 
   return (
@@ -76,8 +76,8 @@ function HomeOwner() {
                       <td className="px-4 py-2 text-center">{item.name}</td>
                       <td className="px-4 py-2 text-center">{item.category.name}</td>
                       <td className="px-4 py-2 text-center"><span className={
-                        item.status === "ACTIVE" ? "text-[#00B112] bg-[#ECFFEE] px-3 py-1 rounded-lg" : "text-[#B10000] bg-[#FFECEC] px-3 py-1 rounded-lg"}>{item.status}</span></td>
-                      <td className="px-4 py-2 text-center">$ {item.price}</td>            
+                        item.status === "ACTIVE" ? `${statusGreen}` : `${statusRed}`}>{item.status}</span></td>
+                      <td className="px-4 py-2 text-center">฿ {item.price}</td>            
                       <td className="flex items-center justify-center pt-2 gap-2"><button className={`${button}`} onClick={() => handleActive(item.id)}>{item.status === "ACTIVE" ? "Inactive" : "Active"}</button><button onClick={() => handleEditButton(item)} className={`${button}`}>Edit</button><button onClick={()=>handleDelete(item.id)} className={`${button}`}>Delete</button></td>
                   </tr>
               ))

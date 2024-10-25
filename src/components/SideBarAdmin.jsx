@@ -1,6 +1,6 @@
-import {  Album, BookCheck, ChevronFirst, ChevronLast, Package, Store, UserCircle } from 'lucide-react'
+import {  Album, ChevronFirst, ChevronLast, Package, Store, UserCircle } from 'lucide-react'
 import SidebarItem from './SidebarItem';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useUser from '../hooks/useUser';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,14 +9,13 @@ const sidebarItems = [
     {icon: <Album size={24} />,text: "Menus",name: "menu",},
     {icon: <UserCircle size={24} />,text: "Users",name: "user",},
     {icon: <Package size={24} />,text: "Orders",name: "orders",},
-    {icon: <BookCheck size={24} />,text: "Bookings",name: "booking",},
 ];
 
 
 function SideBarAdmin() {
 
     const navigate = useNavigate()
-    const {isUser} = useUser()
+    const {isUser,getData} = useUser()
     const [open, setOpen] = useState(true);
     const [active, setActive] = useState("store");
     const handleClickSidebar = () => {
@@ -39,13 +38,14 @@ function SideBarAdmin() {
             case "orders":
                 navigate('/admin/order')
                 break;
-            case "booking":
-                navigate('/admin/booking')
-                break;
             default:
                 break;
         }
     };
+
+    useEffect(() => {
+        getData();
+      }, []);
 
   return (
     <aside className={`h-full transition duration-500 ${open ? "w-60" : "w-min"} `}>
@@ -69,12 +69,12 @@ function SideBarAdmin() {
                 </ul>
 
                 <div className="border-t flex p-3 bg-[#FFDC7F]">
-                    <img src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true" className="w-10 h-10 rounded-full cursor-pointer" />
+                    <img src={ `${isUser?.profileImage}` || "https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"} className="w-10 h-10 rounded-full cursor-pointer" />
                     <div className={`flex justify-between items-center  overflow-hidden ml-3 ${open ? "w-52" : "w-0"}`}>
                         <div className="leading-4">
-                            <h4 className="font-semibold">{isUser.firstName} {isUser.lastName}</h4>
+                            <h4 className="font-semibold">{isUser?.firstName} {isUser?.lastName}</h4>
                             <span className="text-sm text-gray-600">
-                                {isUser.email}
+                                {isUser?.email}
                             </span>
                         </div>
                     </div>

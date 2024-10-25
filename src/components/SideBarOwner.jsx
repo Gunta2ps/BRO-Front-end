@@ -1,4 +1,4 @@
-import {  BookCheck, ChevronFirst, ChevronLast, Package, Store, UserCircle } from 'lucide-react'
+import {  ChevronFirst, ChevronLast, Package, Store, UserCircle } from 'lucide-react'
 import SidebarItem from './SidebarItem';
 import { useState } from 'react';
 import useUser from '../hooks/useUser';
@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 
 const sidebarItems = [
     {icon: <Store size={24} />,text: "Store",name: "store",},
-    {icon: <BookCheck size={24} />,text: "Booking",name: "booking",},
     {icon: <UserCircle size={24} />,text: "Profile",name: "profile",},
     {icon: <Package size={24} />,text: "Orders",name: "orders",},
 ];
@@ -25,19 +24,12 @@ function SideBarOwner() {
         setActive(name);
         switch (name) {
             case "store":
-                console.log('owner');
                 navigate('/owner')
                 break;
-            case "booking":
-                console.log('booking');
-                navigate('/owner/booking')
-                break;
             case "profile":
-                console.log('profile');
                 navigate('/owner/profile')
                 break;
             case "orders":
-                console.log('orders');
                 navigate('/owner/order')
                 break;
         
@@ -68,12 +60,12 @@ function SideBarOwner() {
                 </ul>
 
                 <div className="border-t flex p-3 bg-[#FFDC7F]">
-                    <img src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true" className="w-10 h-10 rounded-full cursor-pointer" />
+                    <img src={`${isUser?.profileImage}`||"https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"} className="w-10 h-10 rounded-full cursor-pointer" />
                     <div className={`flex justify-between items-center  overflow-hidden ml-3 ${open ? "w-52" : "w-0"}`}>
                         <div className="leading-4">
-                            <h4 className="font-semibold">{isUser.firstName} {isUser.lastName}</h4>
+                            <h4 className="font-semibold">{isUser?.firstName} {isUser?.lastName}</h4>
                             <span className="text-sm text-gray-600">
-                            {isUser.email}
+                            {isUser?.email}
                             </span>
                         </div>
                     </div>

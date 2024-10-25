@@ -53,3 +53,9 @@ export const adminDeleteMenu = (token,id) => axios.delete(`/admin/menu/${id}`,{
         Authorization:`Bearer ${token}`
     }
 })
+
+export const adminGetOrder = (token) => axios.get('/admin/order',{
+    headers:{
+        Authorization:`Bearer ${token}`
+    }
+})

@@ -2,12 +2,12 @@
 import { useEffect, useState } from "react"
 import {  button, statusGreen, statusRed } from "../../style/Style"
 import { adminChangeStatusStore, adminDeleteStore, adminGetStore } from "../../api/adminApi"
-import useUser from "../../hooks/useUser"
+
 
 function StoreAdmin() {
 
     const [store,setStore] = useState([])
-    const {token} = useUser()
+    const  token  = localStorage.getItem('token')
 
     const getData = async () =>{
         try {
